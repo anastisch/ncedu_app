@@ -1,0 +1,38 @@
+<form [formGroup]="form" (submit)="submit()">
+    <h2 class="text text-center mb-5">Registration Form</h2>
+  
+    <input formControlName="name" class="form-control" placeholder="Name" required>
+    <div
+      *ngIf="getName!.invalid && (getName!.touched || getName!.dirty)" class="alert alert-danger"
+    >
+      <span *ngIf="getName!.errors?.['required']"
+        >Usermane is required
+      </span>
+    </div>
+  
+    <input formControlName="email" type="email" class="form-control" placeholder="Email" required>
+    <div
+      *ngIf="getEmail!.invalid && (getEmail!.touched || getEmail!.dirty)" class="alert alert-danger"
+    >
+      <span *ngIf="getEmail!.errors?.['required']"
+        >Email is required
+      </span>
+      <span *ngIf="getEmail!.errors?.['email']"
+        >Email is incorrect
+      </span>
+    </div>
+
+    <input formControlName="password" type="password" class="form-control" placeholder="Password" required>
+    <div
+      *ngIf="getPassword!.invalid && (getPassword!.touched || getPassword!.dirty)" class="alert alert-danger"
+    >
+      <span *ngIf="getPassword!.errors?.['required']">
+        Password is required
+      </span>
+      <span *ngIf="getPassword!.errors?.['minlength']">
+        Password must consist of at least 6 digits
+      </span>
+    </div>
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+  </form>
