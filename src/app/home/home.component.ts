@@ -15,15 +15,16 @@ export class HomeComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    // this.http.get('http://localhost:8000/api/user', {withCredentials: true}).subscribe(
-    //   (res: any) => {
-    //     this.message = `Hi ${res.name}`;
-    //   },
-    //   err => {
-    //     this.message = 'You are not logged in';
-    //   }
-    // );
-    this.message = `Hi`;
+    let id = localStorage.getItem("id");
+    this.http.get('http://localhost:8080/users/'+id, {withCredentials: true}).subscribe(
+      (res: any) => {
+        this.message = `Hi, ${res.name}`;
+      },
+      err => {
+        this.message = 'You are not logged in';
+      }
+    );
+    //this.message = `Hi`;
   }
 
 }

@@ -26,6 +26,7 @@ export class NavComponent implements OnInit {
     // this.http.post('http://localhost:8000/api/logout', {}, {withCredentials: true})
     //   .subscribe(() => this.authenticated = false);
     this.authenticated = false;
+    localStorage.clear();
   }
 
 }

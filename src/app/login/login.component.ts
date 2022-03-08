@@ -21,29 +21,26 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: '',
+      name: '',
       password: ''
     })
   }
 
   submit(): void {
-    // this.http.post<string>('http://localhost:8000/api/login', this.form.getRawValue(), {
-    //   withCredentials: true
-    // }).subscribe((authResult) => {
-    //   let jwt = authResult
-    //   this.onAuth(jwt);
-    //   this.router.navigate(['/']);
-
-    // })
-    let jwt = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY0NjY2NTU5MywiaWF0IjoxNjQ2NjY1NTkzfQ.vSMA51qkLyffxk4Cj65Va58sQQBtDssMwfGApNUZcNo";
-    this.onAuth(jwt);
-    this.router.navigate(['/']);
+   this.http.post<string>('http://localhost:8080/api/login', this.form.getRawValue(), { withCredentials: true})
+    .subscribe((authResult: any) => {
+      let jwt = authResult.token;
+      let id = authResult.id;
+      this.onAuth(jwt, id);
+      this.router.navigate(['/']);
+    })
   }
 
-  onAuth(jwt: string): void {
+  onAuth(jwt: string, id: any): void {
     // save jwt
     localStorage.setItem('jwt', jwt);
-    Emitters.authEmitter.emit(true)
+    localStorage.setItem('id', id);
+    Emitters.authEmitter.emit(true);
   }
 
 }

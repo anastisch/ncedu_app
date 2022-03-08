@@ -36,11 +36,11 @@ export class RegisterComponent implements OnInit {
   }
 
   submit(): void {
-    // this.http.post('http://localhost:8000/api/register', this.form.getRawValue())
-    // .subscribe(() => { //res => {
-    //   //console.log(res);
-    //   this.router.navigate(['/login']);
-    // })
-    this.router.navigate(['/login']);
+    console.log(this.form.getRawValue());
+    this.http.post('http://localhost:8080/api/register', this.form.getRawValue())
+      .subscribe((res: any) => {
+        console.log(res);
+        this.router.navigate(['/login'])
+      });
   }
 }
