@@ -12,6 +12,9 @@ import { Router } from '@angular/router';
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
 
+  registerFailed: boolean = false;
+  registerFailureDescription!: string;
+
   constructor(private formBiulder: FormBuilder, private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
@@ -31,16 +34,23 @@ export class RegisterComponent implements OnInit {
   }
 
   get getPassword() {
-    console.log(this.form.get('password'));
     return this.form.get('password');
   }
 
   submit(): void {
-    // this.http.post('http://localhost:8000/api/register', this.form.getRawValue())
-    // .subscribe(() => { //res => {
-    //   //console.log(res);
-    //   this.router.navigate(['/login']);
-    // })
-    this.router.navigate(['/login']);
+    this.registerFailed = false;
+    this.http.post('http://localhost:8080/api/register', this.form.getRawValue())
+    .subscribe(
+      (res: any) => {
+        console.log(res);
+        this.router.navigate(['/login']);
+      },
+      (err: any) => {
+        console.log(err);
+        this.registerFailed = true;
+        this.registerFailureDescription = err.error['message'];
+      }
+  )
+    // this.router.navigate(['/login']);
   }
 }

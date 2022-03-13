@@ -1,6 +1,8 @@
 <form [formGroup]="form" (submit)="submit()">
     <h2 class="text text-center mb-5">Registration Form</h2>
-  
+    <div *ngIf="registerFailed" class="alert alert-danger">
+      <span>{{registerFailureDescription}}</span>
+    </div>
     <input formControlName="name" class="form-control" placeholder="Name" required>
     <div
       *ngIf="getName!.invalid && (getName!.touched || getName!.dirty)" class="alert alert-danger"

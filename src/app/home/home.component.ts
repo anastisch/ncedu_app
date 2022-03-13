@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { EmitterVisitorContext } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { Emitters } from '../emitter/emitters';
+import { User } from '../model/user';
+import { AuthService } from '../service/auth/auth.service';
+import { UserService } from '../service/user/user.service';
 
 @Component({
   selector: 'app-home',
@@ -12,18 +14,21 @@ export class HomeComponent implements OnInit {
 
   message = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private userService: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    // this.http.get('http://localhost:8000/api/user', {withCredentials: true}).subscribe(
-    //   (res: any) => {
-    //     this.message = `Hi ${res.name}`;
-    //   },
-    //   err => {
-    //     this.message = 'You are not logged in';
-    //   }
-    // );
-    this.message = `Hi`;
+    if (this.authService.isLoggedIn) {
+      this.userService.getData(this.authService.userId!).subscribe(
+        (userData: User) => {
+          this.message = `Hi ${userData.name}`;
+        },
+        (err: any) => {
+          this.message = 'Failed to fetch user data';
+        }
+      )
+    } else {
+      this.message = 'You are not logged in';
+    }
   }
 
 }

@@ -1,7 +1,10 @@
 <form [formGroup]="form" (submit)="submit()">
-    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-  
-    <input formControlName="email" type="email" class="form-control" placeholder="Email" required>
+    <h1 class="h3 mb-3 fw-normal">Sign in</h1>
+    <div *ngIf="loginFailed" class="alert alert-danger">
+      <span>{{loginFailureDescription}}</span>
+    </div>
+
+    <input formControlName="username" type="username" class="form-control" placeholder="Email" required>
   
     <input formControlName="password" type="password" class="form-control" placeholder="Password" required>
   
