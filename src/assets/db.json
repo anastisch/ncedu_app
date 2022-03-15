@@ -1,0 +1,12 @@
+{
+    "data": [
+        {
+            "coffeeShopName": "name1",
+            "desc": "desc1"
+        },
+        {
+            "coffeeShopName": "name2",
+            "desc": "desc2"
+        }
+    ]
+}

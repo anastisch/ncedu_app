@@ -2,8 +2,7 @@ export class LoginResponse {
     token!: string;
     type!: string;
     id!: number;
-    username!: String;
+    username!: string;
     email!: string;
     roles!: Array<string>;
-
 }

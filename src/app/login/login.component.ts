@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(username, password).subscribe(
       (authResult: LoginResponse) => {
         console.log(authResult);
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       },
       (err: any) => {
         console.log(err);
@@ -48,9 +48,6 @@ export class LoginComponent implements OnInit {
         this.loginFailureDescription = 'Unable to sign in!';
       }
       )
-    // let jwt = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY0NjY2NTU5MywiaWF0IjoxNjQ2NjY1NTkzfQ.vSMA51qkLyffxk4Cj65Va58sQQBtDssMwfGApNUZcNo";
-    // this.onAuth(jwt);
-    // this.router.navigate(['/']);
   }
 
   

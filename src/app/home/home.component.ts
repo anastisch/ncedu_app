@@ -17,8 +17,9 @@ export class HomeComponent implements OnInit {
   constructor(private userService: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn) {
-      this.userService.getData(this.authService.userId!).subscribe(
+    if (this.authService.user) {
+      console.log("home")
+      this.userService.getData(this.authService.user.id!).subscribe(
         (userData: User) => {
           this.message = `Hi ${userData.name}`;
         },

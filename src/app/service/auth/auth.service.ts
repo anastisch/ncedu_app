@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
 import { User } from 'src/app/model/user';
 import { Router } from '@angular/router';
 import { Emitters } from 'src/app/emitter/emitters';
 import { LoginResponse } from 'src/app/model/login-response';
+import { Role } from 'src/app/model/Role';
 
 const AUTH_API = 'http://localhost:8080/api';
 
@@ -13,7 +14,24 @@ const AUTH_API = 'http://localhost:8080/api';
 })
 export class AuthService {
 
-  constructor(private httpClient: HttpClient, private router: Router) { }
+  private userData: BehaviorSubject<User | null>;
+  public currentUser: Observable<User | null>;
+
+  //public role: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+
+  constructor(private httpClient: HttpClient, private router: Router) {
+    let userJsonData = localStorage.getItem('userData');
+    if (userJsonData) {
+      let parsedUserData =  JSON.parse(userJsonData);
+      Object.setPrototypeOf(parsedUserData, User.prototype)
+      this.userData = new BehaviorSubject<User | null>(parsedUserData);
+    } else {
+      this.userData = new BehaviorSubject<User | null>(null);
+    }
+
+    this.currentUser = this.userData.asObservable();
+    console.log("AuthService initialized. Current user: ", this.userData.value)
+  }
 
   login(name: string, password:string): Observable<LoginResponse> {
     return this.httpClient.post<LoginResponse>(AUTH_API + '/login', {name, password}).pipe(
@@ -29,36 +47,62 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('id');
-
-    Emitters.authEmitter.emit(false);
+    localStorage.removeItem('userData');
+    this.userData.next(null);
+    // this.role.next(null);
 
     this.router.navigate(['login']);
   }
 
-  get token(): string | null {
-    return localStorage.getItem('jwt');
+  public get user(): User | null {
+    return this.userData.value;
   }
 
-  get userId(): number | null {
-    let id = localStorage.getItem('id')
-    if (id != null) {
-      return Number(id)
-    }
-    return null
-  }
+  // get isLoggedIn(): Observable<boolean> {
+  //   console.log(this.userData.value);
+  //   console.log("djsjdfhg");
 
-  get isLoggedIn(): boolean {
-    return this.token !== null;
-  }
+  //   return this.currentUser.pipe(map( (user: any) => {
+  //     console.log("user")
+  //     console.log(user)
+  //     console.log(user != null)
+  //     return user != null
+  //   }));
+  // }
+
+  // get isGuest(): Observable<boolean> {
+  //   return this.isLoggedIn.pipe(map((loggedIn) => !loggedIn));
+  // }
+
+  // get isAdmin(): Observable<boolean> {
+  //   return this.currentUser.pipe(map((user: User) => {console.log(user); return user?.role == Role.Admin}));
+  // }
+
+  // get isUser(): Observable<boolean> {
+  //   return this.currentUser.pipe(map((user: User) => user?.role == Role.User));
+  // }
 
   private onLogin(authResult: LoginResponse): void {
-    console.log("login!!")
-    // save jwt
-    localStorage.setItem('jwt', authResult.token);
-    localStorage.setItem('id', authResult.id.toString());
-    Emitters.authEmitter.emit(true)
+    console.log("!!login!!");
+    let userRole = authResult.roles[0] as Role
+    let newUser = new User(
+      authResult.id, 
+      authResult.username, 
+      authResult.email, 
+      authResult.token, 
+      userRole
+    );
+    localStorage.setItem('userData', JSON.stringify(newUser));
+    this.userData.next(newUser)
+
+
+    // localStorage.setItem('jwt', authResult.token);
+    // localStorage.setItem('role', authResult.roles[0]);
+    // localStorage.setItem('id', authResult.id.toString());
+    //Emitters.authEmitter.emit(true)
+
+    // console.log(authResult);
+    // this.role.next(authResult.roles[0]);
   }
 
   private handleError(error: HttpErrorResponse) {

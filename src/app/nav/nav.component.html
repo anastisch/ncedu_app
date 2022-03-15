@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
   <div class="container-fluid">
-    <a routerLink="/" class="navbar-brand">Home</a>
+    <a routerLink="/home" class="navbar-brand">Home</a>
 
     <div>
       <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="!authenticated">
@@ -13,6 +13,15 @@
       </ul>
 
       <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="authenticated">
+        <li class="nav-item">
+          <a routerLink="/coffeeShopsList" class="nav-link" *ngIf="isAdmin">CoffeeShop List</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/userButton'" class="nav-link" *ngIf="isUser">User Button</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/home" class="nav-link">Public Button</a>
+        </li>
         <li class="nav-item">
           <a routerLink="/login" class="nav-link" (click)="logout()">Logout</a>
         </li>

@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Emitters } from '../emitter/emitters';
+import { Role } from '../model/Role';
+import { User } from '../model/user';
 import { AuthService } from '../service/auth/auth.service';
 
 @Component({
@@ -11,25 +13,33 @@ import { AuthService } from '../service/auth/auth.service';
 export class NavComponent implements OnInit {
 
   authenticated = false;
+  isAdmin = false;
+  isUser = false;
 
   constructor(private http: HttpClient, private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    this.authenticated = this.authService.isLoggedIn;
-    Emitters.authEmitter.subscribe(
-      (auth: boolean) => {
-        this.authenticated = auth;
+    this.updateUserData(this.authService.user);
+    this.authService.currentUser.subscribe(
+      (userData: User | null) => {
+        this.updateUserData(userData)
       }
-    );
+    )
   }
 
   logout(): void {
-
-    // this.http.post('http://localhost:8000/api/logout', {}, {withCredentials: true})
-    //   .subscribe(() => this.authenticated = false);
     this.authenticated = false;
+    this.isAdmin = false;
+    this.isUser = false;
     this.authService.logout();
+  }
+
+  private updateUserData(userData: User | null) {
+    console.log("Updating user data: ", userData);
+    this.authenticated = userData != null
+    this.isAdmin = userData?.isAdmin ?? false
+    this.isUser = userData?.isUser ?? false
   }
 
 }

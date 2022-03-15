@@ -1,0 +1,89 @@
+<div>
+  <h4 class="p-3 text-center">
+    Coffee Shops List
+  </h4>
+</div>
+
+<div class="text-center">
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCoffeeShop" type="button">
+    New Coffee Shop
+  </button>
+</div>
+
+
+<div class="container">
+  <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">CoffeeShopName</th>
+            <th scope="col">Description</th>
+            <th scope="col">Modification coffee shops list</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor= "let coffeeShop of coffeeShops">
+            <td>{{coffeeShop.coffeeShopName}}</td>
+            <td>{{coffeeShop.desc}}</td>
+            <td>
+              <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#addCoffeeShop">Edit</button>
+              <button type="button" class="btn btn-outline-danger">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+    
+    <!-- Add coffee shop Modal -->
+    <div class="modal fade" id="addCoffeeShop" tabindex="-1" area-labellebdy="exampleModalLabel" area-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add new coffee shop</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            
+            <form [formGroup]="newCoffeeShopDetails">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+                <input type="text" formControlName="coffeeShopName" class="form-control" id="coffeeShopName" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Descriprion</label>
+                <input type="text" formControlName="desc" class="form-control" id="desc" aria-describedby="emailHelp">
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="addCoffeeShop()">Add coffee shop</button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="editCoffeeShop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
