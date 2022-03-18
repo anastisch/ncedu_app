@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { CoffeeShop } from 'src/app/model/coffee-shop';
-import { getCoffeeShopsResponse } from 'src/app/model/getCoffeeShopsresponse';
+import { getCoffeeShopsResponse } from 'src/app/model/getCoffeeShopsResponse';
 
 @Injectable({
   providedIn: 'root'

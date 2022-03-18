@@ -1,4 +1,5 @@
-<form [formGroup]="form" (submit)="submit()">
+<main class="form-signin">
+  <form [formGroup]="form" (submit)="submit()">
     <h2 class="text text-center mb-5">Registration Form</h2>
     <div *ngIf="registerFailed" class="alert alert-danger">
       <span>{{registerFailureDescription}}</span>
@@ -38,3 +39,4 @@
 
     <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
   </form>
+</main>
