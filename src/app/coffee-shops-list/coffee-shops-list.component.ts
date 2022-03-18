@@ -13,7 +13,7 @@ export class CoffeeShopsListComponent implements OnInit {
 
     coffeeShopDetails!: FormGroup;
 
-    coffeeShopObj!: CoffeeShop;
+    selectedCoffeeShop!: CoffeeShop;
 
   constructor(private formBuilder: FormBuilder, public coffeeShopService: CoffeeShopService) { }
 
@@ -32,43 +32,36 @@ export class CoffeeShopsListComponent implements OnInit {
     )
   }
 
+  prepareAddForm() {
+    this.coffeeShopDetails.controls['coffeeShopName'].setValue('');
+    this.coffeeShopDetails.controls['desc'].setValue('');
+  }
+
   addCoffeeShop() {
-    this.coffeeShopObj = new CoffeeShop(
+    let newCoffeeShop = new CoffeeShop(
                               this.coffeeShopDetails.value.coffeeShopName,
                               this.coffeeShopDetails.value.desc);
-    this.coffeeShops.push(this.coffeeShopObj);
+    this.coffeeShops.push(newCoffeeShop);
     console.log(this.coffeeShops);
   }
 
-  editCoffeeShop(coffeeShop: CoffeeShop) {
+  prepareEditDeleteForm(coffeeShop: CoffeeShop) {
+    this.selectedCoffeeShop = coffeeShop;
     this.coffeeShopDetails.controls['coffeeShopName'].setValue(coffeeShop.coffeeShopName);
     this.coffeeShopDetails.controls['desc'].setValue(coffeeShop.desc);
   }
 
-  getPrevCoffeeShopBy(name: string) {
-    var i = 0;
-    while (i < this.coffeeShops.length) {
-      if (name == this.coffeeShops[i].coffeeShopName) {
-        return this.coffeeShops[i];
-      }
-    }
-    return null;
-  }
-
   updateCoffeeShop() {
-    var i = 0;
-    while (i < this.coffeeShops.length) {
-      if (this.coffeeShopObj.coffeeShopName == this.coffeeShops[i].coffeeShopName) {
-        this.coffeeShops[i].coffeeShopName = this.coffeeShopDetails.value.coffeeShopName;
-        this.coffeeShops[i].coffeeShopName = this.coffeeShopDetails.value.desc;
-      }
-      i++;
-    }
-
-    this.coffeeShopObj.coffeeShopName = this.coffeeShopDetails.value.coffeeShopName;
-    this.coffeeShopObj.desc = this.coffeeShopDetails.value.desc;
+    this.selectedCoffeeShop.coffeeShopName = this.coffeeShopDetails.value.coffeeShopName;
+    this.selectedCoffeeShop.desc = this.coffeeShopDetails.value.desc;
 
     console.log(this.coffeeShops);
+  }
+
+
+  deleteCoffeeShop() {
+    let shopToDeleteIndex = this.coffeeShops.indexOf(this.selectedCoffeeShop)
+    this.coffeeShops.splice(shopToDeleteIndex, 1);
   }
 
 }

@@ -1,6 +1,6 @@
 <main class="form-signin">
   <form [formGroup]="form" (submit)="submit()">
-    <h2 class="text text-center mb-5">Sign in</h2>
+    <h2 class="h3 mb-3 fw-normal">Sign in</h2>
     <div *ngIf="loginFailed" class="alert alert-danger">
       <span>{{loginFailureDescription}}</span>
     </div>
