@@ -1,12 +1,50 @@
 {
-    "data": [
+  "coffeeShops": [
+    {
+      "id": 1,
+      "name": "Coffee Bon",
+      "desc": "№1",
+      "location": "3.4 4.222",
+      "address": "ул. Мира, 23",
+      "phone": "89765643521",
+      "manager": "Coffee Bon Admin",
+      "workingHours": [
         {
-            "coffeeShopName": "name1",
-            "desc": "desc1"
+          "weekday": "ПН",
+          "startTime": "10:00",
+          "endTime": "20:00"
         },
         {
-            "coffeeShopName": "name2",
-            "desc": "desc2"
+          "weekday": "ВТ",
+          "startTime": "10:00",
+          "endTime": "20:00"
+        },
+        {
+          "weekday": "СР",
+          "startTime": "10:00",
+          "endTime": "20:00"
+        },
+        {
+          "weekday": "ЧТ",
+          "startTime": "10:00",
+          "endTime": "20:00"
+        },
+        {
+          "weekday": "ПТ",
+          "startTime": "10:00",
+          "endTime": "20:00"
+        },
+        {
+          "weekday": "СБ",
+          "startTime": "10:00",
+          "endTime": "20:00"
+        },
+        {
+          "weekday": "ВС",
+          "startTime": "10:00",
+          "endTime": "20:00"
         }
-    ]
+      ]
+    }
+  ]
 }

@@ -1,4 +1,5 @@
-import { Role } from "./Role";
+import { Role } from "../role/Role";
+
 
 export class User {
     // id!: number;

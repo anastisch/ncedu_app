@@ -1,67 +1,173 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { CoffeeShop } from '../model/coffee-shop';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CoffeeShop } from '../model/coffeeShop/coffee-shop';
+import { CoffeeShopSummary } from '../model/coffeeShopSummary/coffee-shop-summary';
+import { Schedule } from '../model/hours/schedule copy';
+import { allWeekDays, WeekDay, WeekDayCodes, WeekDayCodesf } from '../model/hours/week-day';
+import { WorkingHours } from '../model/hours/working-hours';
 import { CoffeeShopService } from '../service/coffeeShops/coffee-shop.service';
+import { DadataAddress, DadataConfig, DadataSuggestion, DadataType } from '@kolkov/ngx-dadata';
 
 @Component({
   selector: 'app-coffee-shops-list',
   templateUrl: './coffee-shops-list.component.html',
   styleUrls: ['./coffee-shops-list.component.css']
 })
+
 export class CoffeeShopsListComponent implements OnInit {
-    coffeeShops: Array<CoffeeShop> = [];
+  coffeeShops: Array<CoffeeShopSummary> = [];
 
-    coffeeShopDetails!: FormGroup;
+  coffeeShopDetails!: FormGroup;
 
-    selectedCoffeeShop!: CoffeeShop;
+  selectedCoffeeShopId!: number;
+
+  schedule!: Schedule;
+
+  config: DadataConfig = {
+    apiKey: '343818efe09560ad70087db3519915a5421ddafd',
+    type: DadataType.address,
+    locations: [
+      {
+          country: 'Россия',
+          country_iso_code: 'RUS',
+          region: 'Санкт-Петербург',
+          city: 'Санкт-Петербург',
+          kladr_id: '78 000 000 000 00'
+      }        
+  ]
+  };
 
   constructor(private formBuilder: FormBuilder, public coffeeShopService: CoffeeShopService) { }
 
   ngOnInit(): void {
     this.coffeeShopDetails = this.formBuilder.group({
-      coffeeShopName: [''],
+      id: [''],
+      name: [''],
       desc: [''],
+      location: [''],
+      address: [''],
+      phone: [''],
+      manager: ['']
     })
 
+    this.schedule = new Schedule();
 
+    this.loadCoffeeShops();
+  }
+
+  prepareAddForm() {
+    this.coffeeShopDetails.controls['id'].setValue('');
+    this.coffeeShopDetails.controls['name'].setValue('');
+    this.coffeeShopDetails.controls['desc'].setValue('');
+    this.coffeeShopDetails.controls['location'].setValue('');
+    this.coffeeShopDetails.controls['address'].setValue('');
+    this.coffeeShopDetails.controls['phone'].setValue('');
+    this.coffeeShopDetails.controls['manager'].setValue('');
+    this.schedule.workingHours = [];
+    allWeekDays.forEach(weekDay => {
+      let weekDayCode = WeekDayCodes[weekDay]
+      let workingHours = new WorkingHours(weekDayCode, null, null)
+      this.schedule.workingHours.push(workingHours)
+    })
+  }
+
+  addCoffeeShop() {
+    let newCoffeeShop = this.extractFormData();    
+    
+    this.coffeeShopService.addCoffeeShop(newCoffeeShop).subscribe(
+      value => {
+        console.log("New coffee shop added");
+        this.loadCoffeeShops();
+      },
+      error => {
+        console.error("FAILED TO ADD COFFEE SHOP", error);
+      }
+    )
+  }
+
+  prepareEditDeleteForm(coffeeShopSummary: CoffeeShopSummary) {
+    this.selectedCoffeeShopId = coffeeShopSummary.id;
+    this.coffeeShopService.getCoffeeShop(coffeeShopSummary.id).subscribe(
+      coffeeShop => {
+        console.log("Received data on coffee shop with id ", coffeeShopSummary.id, coffeeShop);
+        
+        this.coffeeShopDetails.controls['id'].setValue(coffeeShop.id);
+        this.coffeeShopDetails.controls['name'].setValue(coffeeShop.name);
+        this.coffeeShopDetails.controls['desc'].setValue(coffeeShop.desc);
+        this.coffeeShopDetails.controls['location'].setValue(coffeeShop.location);
+        this.coffeeShopDetails.controls['address'].setValue(coffeeShop.address);
+        this.coffeeShopDetails.controls['phone'].setValue(coffeeShop.phone);
+        this.coffeeShopDetails.controls['manager'].setValue(coffeeShop.manager);
+
+        this.schedule.workingHours = coffeeShop.workingHours;
+      },
+      error => {
+
+      }
+    )
+  }
+
+  updateCoffeeShop() {
+    this.selectedCoffeeShopId = this.coffeeShopDetails.value.id;
+    this.coffeeShopService.updateCoffeeShop(this.extractFormData()).subscribe(
+      value => {
+        this.loadCoffeeShops();
+        console.log(this.coffeeShops);
+      }, 
+      error => {
+        console.log("FAILED TO UPDATE COFFEE SHOP", error);
+      }
+    )
+  }
+
+
+  deleteCoffeeShop() {
+    this.coffeeShopService.deleteCoffeeShop(this.selectedCoffeeShopId).subscribe(
+      value => {
+        this.loadCoffeeShops();
+      },
+      error => {
+        console.log("FAILED TO DELETE COFFEE SHOP WITH ID ", this.selectedCoffeeShopId, error);
+      }
+    )
+
+  }
+
+  private loadCoffeeShops() {
     this.coffeeShopService.getCoffeeShops().subscribe(
       (response) => {
-        console.log(response);
+        console.log("All coffee shop: ", response);
         this.coffeeShops = response;
       }
     )
   }
 
-  prepareAddForm() {
-    this.coffeeShopDetails.controls['coffeeShopName'].setValue('');
-    this.coffeeShopDetails.controls['desc'].setValue('');
-  }
+  private extractFormData(): CoffeeShop {
+    let shopData = this.coffeeShopDetails.value;
+    let workingHours = this.schedule.workingHours;
 
-  addCoffeeShop() {
     let newCoffeeShop = new CoffeeShop(
-                              this.coffeeShopDetails.value.coffeeShopName,
-                              this.coffeeShopDetails.value.desc);
-    this.coffeeShops.push(newCoffeeShop);
-    console.log(this.coffeeShops);
+      shopData.id,
+      shopData.name,
+      shopData.desc,
+      shopData.location, 
+      shopData.address,
+      shopData.url,
+      shopData.phone,
+      shopData.rating,
+      shopData.manager,
+      workingHours,
+      shopData.grades
+    );
+
+    console.log(newCoffeeShop);
+
+    return newCoffeeShop;
   }
 
-  prepareEditDeleteForm(coffeeShop: CoffeeShop) {
-    this.selectedCoffeeShop = coffeeShop;
-    this.coffeeShopDetails.controls['coffeeShopName'].setValue(coffeeShop.coffeeShopName);
-    this.coffeeShopDetails.controls['desc'].setValue(coffeeShop.desc);
-  }
-
-  updateCoffeeShop() {
-    this.selectedCoffeeShop.coffeeShopName = this.coffeeShopDetails.value.coffeeShopName;
-    this.selectedCoffeeShop.desc = this.coffeeShopDetails.value.desc;
-
-    console.log(this.coffeeShops);
-  }
-
-
-  deleteCoffeeShop() {
-    let shopToDeleteIndex = this.coffeeShops.indexOf(this.selectedCoffeeShop)
-    this.coffeeShops.splice(shopToDeleteIndex, 1);
+  suggestAddresses(event: DadataSuggestion) {
+    const addressData = event.data as DadataAddress;
+    console.log(addressData);
   }
 
 }

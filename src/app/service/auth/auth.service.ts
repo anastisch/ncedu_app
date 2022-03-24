@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
-import { User } from 'src/app/model/user';
 import { Router } from '@angular/router';
-import { Emitters } from 'src/app/emitter/emitters';
-import { LoginResponse } from 'src/app/model/login-response';
-import { Role } from 'src/app/model/Role';
+import { Role } from 'src/app/model/role/Role';
+import { LoginResponse } from 'src/app/dto/loginResponse/login-response';
+import { User } from 'src/app/model/user/user';
 
 const AUTH_API = 'http://localhost:8080/api';
 

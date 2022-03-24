@@ -10,6 +10,8 @@ import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CoffeeShopsListComponent } from './coffee-shops-list/coffee-shops-list.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxDadataModule } from '@kolkov/ngx-dadata';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { CoffeeShopsListComponent } from './coffee-shops-list/coffee-shops-list.
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule,
+    NgxDadataModule
   ],
   providers: [],
   bootstrap: [AppComponent]

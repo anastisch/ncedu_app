@@ -5,7 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { CoffeeShopsListComponent } from './coffee-shops-list/coffee-shops-list.component';
 import { AuthGuard } from './guards/auth-guard';
-import { Role } from './model/Role';
+import { Role } from './model/role/Role';
 const routes: Routes = [
   {
     path: '', 

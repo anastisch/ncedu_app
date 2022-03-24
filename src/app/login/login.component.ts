@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoginResponse } from '../dto/loginResponse/login-response';
 import { Emitters } from '../emitter/emitters';
-import { LoginResponse } from '../model/login-response';
-import { User } from '../model/user';
 import { AuthService } from '../service/auth/auth.service';
 
 
