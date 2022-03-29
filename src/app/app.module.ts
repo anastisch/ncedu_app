@@ -12,6 +12,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CoffeeShopsListComponent } from './coffee-shops-list/coffee-shops-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDadataModule } from '@kolkov/ngx-dadata';
+import { AngularYandexMapsModule } from 'angular8-yandex-maps';
+import { MapModalComponent } from './map/map-modal/map-modal.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { NgxDadataModule } from '@kolkov/ngx-dadata';
     LoginComponent,
     HomeComponent,
     NavComponent,
-    CoffeeShopsListComponent
+    CoffeeShopsListComponent,
+    MapModalComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +32,8 @@ import { NgxDadataModule } from '@kolkov/ngx-dadata';
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
-    NgxDadataModule
+    NgxDadataModule,
+    AngularYandexMapsModule.forRoot({ apikey: "bc783af1-a4e4-4f05-b0ab-b8378dff541e", lang: "ru_RU" })
   ],
   providers: [],
   bootstrap: [AppComponent]

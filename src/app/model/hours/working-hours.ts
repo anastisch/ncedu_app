@@ -4,7 +4,7 @@ export class WorkingHours {
 
     constructor(
         public weekday: string,
-        public startTime: Time | null,
-        public endTime: Time  | null
+        public start_time: Time | null,
+        public end_time: Time  | null
     ) { }
 }

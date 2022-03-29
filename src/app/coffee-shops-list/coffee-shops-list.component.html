@@ -37,31 +37,16 @@
               <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCoffeeShop" (click)="prepareEditDeleteForm(coffeeShop)">
                 <i class="bi bi-trash"></i>
               </button>
-              <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detailsCoffeeShop" (click)="prepareEditDeleteForm(coffeeShop)">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
             </td>
             <td>{{coffeeShop.address}}</td>
             <td>
               <ul *ngFor= "let workingDay of coffeeShop.workingHours">
                   <li>
-                    {{workingDay.weekday}}: {{workingDay.startTime}}-{{workingDay.endTime}}
+                    {{workingDay.weekday}}: {{workingDay.start_time}}-{{workingDay.end_time}}
                   </li>
               </ul>
             </td>
             <td>{{coffeeShop.phone}}</td>
-
-            <!-- <td class="text-center col-md-2 helpButtons">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCoffeeShop" (click)="prepareEditDeleteForm(coffeeShop)">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCoffeeShop" (click)="prepareEditDeleteForm(coffeeShop)">
-                <i class="bi bi-trash"></i>
-              </button>
-              <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsCoffeeShop" (click)="prepareEditDeleteForm(coffeeShop)">
-                <i class="bi bi-three-dots-vertical"></i>
-              </button>
-            </td> -->
         </tr>
     </tbody>
   </table>
@@ -69,7 +54,7 @@
     
     <!-- Add coffee shop Modal -->
     <div class="modal fade" id="addCoffeeShop" tabindex="-1" area-labellebdy="exampleModalLabel" area-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Добавить новую кофейню</h5>
@@ -83,11 +68,16 @@
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Описание</label>
-                <input type="text" formControlName="desc" class="form-control" id="desc">
+                <input type="text" formControlName="description" class="form-control" id="description">
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Геолокация</label>
-                <input type="text" formControlName="location" class="form-control" id="location">
+                <button type="button" class="btn btn-primary" (click)="displayMap()">{{coordinatesButtonText}}</button>
+                <span>{{ location }}</span>
+                <div *ngIf="isMapDisplayed">
+                  <app-map-modal [parent]="this"></app-map-modal>
+                </div>
+                <!-- <input type="text" formControlName="location" class="form-control" id="location"> -->
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label address" >Адрес</label>
@@ -101,8 +91,8 @@
                 <label for="exampleInputEmail1" class="form-label">Расписание работы</label><br>
                 <div class="d-flex workDayInputBlock" *ngFor= "let workDay of schedule.workingHours">
                   <p class="workDayName">{{ workDay.weekday }}</p>
-                  <input type="time" id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.startTime" [ngModelOptions]="{standalone: true}" required>
-                  <input type="time" id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.endTime" [ngModelOptions]="{standalone: true}" required>
+                  <input type="time" id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.start_time" [ngModelOptions]="{standalone: true}" required>
+                  <input type="time" id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.end_time" [ngModelOptions]="{standalone: true}" required>
                 </div>
               </div>
               <div class="mb-3">
@@ -121,14 +111,13 @@
 
     <!-- Edit coffee shop Modal -->
     <div class="modal fade" id="editCoffeeShop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Изменить информацию о кофейне</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-
             <form [formGroup]="coffeeShopDetails">
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Название кофейни</label>
@@ -136,11 +125,15 @@
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Описание</label>
-                <input type="text" formControlName="desc" class="form-control" id="desc">
+                <input type="text" formControlName="description" class="form-control" id="description">
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Геолокация</label>
-                <input type="text" formControlName="location" class="form-control" id="location">
+                <button type="button" class="btn btn-primary" (click)="displayMap()">{{coordinatesButtonText}}</button>
+                <span>{{ location }}</span>
+                <div *ngIf="isMapDisplayed">
+                  <app-map-modal [parent]="this"></app-map-modal>
+                </div>
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label address">Адрес</label>
@@ -154,8 +147,8 @@
                 <label for="exampleInputEmail1" class="form-label">Расписание работы</label><br>
                 <div class="d-flex workDayInputBlock" *ngFor= "let workDay of schedule.workingHours">
                   <p class="workDayName">{{ workDay.weekday }}</p>
-                  <input type="time" id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.startTime" [ngModelOptions]="{standalone: true}" required>
-                  <input type="time" id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.endTime" [ngModelOptions]="{standalone: true}" required>
+                  <input type="time" id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.start_time" [ngModelOptions]="{standalone: true}" required>
+                  <input type="time" id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.end_time" [ngModelOptions]="{standalone: true}" required>
                 </div>
               </div>
               <div class="mb-3">
@@ -206,11 +199,11 @@
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Описание</label>
-                <input type="text" readonly formControlName="desc" class="form-control" id="desc">
+                <input type="text" readonly formControlName="description" class="form-control" id="description">
               </div>
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Геолокация</label>
-                <input type="text" readonly formControlName="location" class="form-control" id="location">
+                <label for="exampleInputEmail1" class="form-label">Геолокация</label><br>
+                <span>{{ location }}</span>
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Адрес</label>
@@ -224,8 +217,8 @@
                 <label for="exampleInputEmail1" class="form-label">Расписание работы</label><br>
                 <div class="d-flex workDayInputBlock" *ngFor= "let workDay of schedule.workingHours">
                   <p class="workDayName">{{ workDay.weekday }}</p>
-                  <input type="time" readonly id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.startTime" [ngModelOptions]="{standalone: true}" required>
-                  <input type="time" readonly id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.endTime" [ngModelOptions]="{standalone: true}" required>
+                  <input type="time" readonly id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.start_time" [ngModelOptions]="{standalone: true}" required>
+                  <input type="time" readonly id="time" name="time" min="00:01" max="23:59" [(ngModel)]="workDay.end_time" [ngModelOptions]="{standalone: true}" required>
                 </div>
               </div>
               <div class="mb-3">

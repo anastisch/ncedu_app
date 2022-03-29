@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CoffeeShop } from '../model/coffeeShop/coffee-shop';
 import { CoffeeShopSummary } from '../model/coffeeShopSummary/coffee-shop-summary';
@@ -7,6 +7,7 @@ import { allWeekDays, WeekDay, WeekDayCodes, WeekDayCodesf } from '../model/hour
 import { WorkingHours } from '../model/hours/working-hours';
 import { CoffeeShopService } from '../service/coffeeShops/coffee-shop.service';
 import { DadataAddress, DadataConfig, DadataSuggestion, DadataType } from '@kolkov/ngx-dadata';
+import { MapModalComponent } from '../map/map-modal/map-modal.component';
 
 @Component({
   selector: 'app-coffee-shops-list',
@@ -22,6 +23,15 @@ export class CoffeeShopsListComponent implements OnInit {
   selectedCoffeeShopId!: number;
 
   schedule!: Schedule;
+
+  location!: string;
+
+  @ViewChild(MapModalComponent)
+  map!: MapModalComponent;
+
+  isMapDisplayed = false;
+  coordinatesButtonText = "Добавить геолокацию";
+
 
   config: DadataConfig = {
     apiKey: '343818efe09560ad70087db3519915a5421ddafd',
@@ -43,14 +53,14 @@ export class CoffeeShopsListComponent implements OnInit {
     this.coffeeShopDetails = this.formBuilder.group({
       id: [''],
       name: [''],
-      desc: [''],
-      location: [''],
+      description: [''],
       address: [''],
       phone: [''],
       manager: ['']
     })
 
     this.schedule = new Schedule();
+    this.location = "";
 
     this.loadCoffeeShops();
   }
@@ -58,17 +68,18 @@ export class CoffeeShopsListComponent implements OnInit {
   prepareAddForm() {
     this.coffeeShopDetails.controls['id'].setValue('');
     this.coffeeShopDetails.controls['name'].setValue('');
-    this.coffeeShopDetails.controls['desc'].setValue('');
-    this.coffeeShopDetails.controls['location'].setValue('');
+    this.coffeeShopDetails.controls['description'].setValue('');
     this.coffeeShopDetails.controls['address'].setValue('');
     this.coffeeShopDetails.controls['phone'].setValue('');
     this.coffeeShopDetails.controls['manager'].setValue('');
     this.schedule.workingHours = [];
+
     allWeekDays.forEach(weekDay => {
       let weekDayCode = WeekDayCodes[weekDay]
       let workingHours = new WorkingHours(weekDayCode, null, null)
       this.schedule.workingHours.push(workingHours)
     })
+    this.location = ""
   }
 
   addCoffeeShop() {
@@ -93,13 +104,13 @@ export class CoffeeShopsListComponent implements OnInit {
         
         this.coffeeShopDetails.controls['id'].setValue(coffeeShop.id);
         this.coffeeShopDetails.controls['name'].setValue(coffeeShop.name);
-        this.coffeeShopDetails.controls['desc'].setValue(coffeeShop.desc);
-        this.coffeeShopDetails.controls['location'].setValue(coffeeShop.location);
+        this.coffeeShopDetails.controls['description'].setValue(coffeeShop.description);
         this.coffeeShopDetails.controls['address'].setValue(coffeeShop.address);
         this.coffeeShopDetails.controls['phone'].setValue(coffeeShop.phone);
         this.coffeeShopDetails.controls['manager'].setValue(coffeeShop.manager);
 
         this.schedule.workingHours = coffeeShop.workingHours;
+        this.location = coffeeShop.location['lat'] + ',' + coffeeShop.location['lng'];
       },
       error => {
 
@@ -149,8 +160,8 @@ export class CoffeeShopsListComponent implements OnInit {
     let newCoffeeShop = new CoffeeShop(
       shopData.id,
       shopData.name,
-      shopData.desc,
-      shopData.location, 
+      shopData.description,
+      this.location,
       shopData.address,
       shopData.url,
       shopData.phone,
@@ -168,6 +179,16 @@ export class CoffeeShopsListComponent implements OnInit {
   suggestAddresses(event: DadataSuggestion) {
     const addressData = event.data as DadataAddress;
     console.log(addressData);
+  }
+
+  displayMap() {
+    this.isMapDisplayed = !this.isMapDisplayed;
+    if (this.isMapDisplayed) {
+      this.coordinatesButtonText = "Закрыть карту";
+    }
+    else {
+      this.coordinatesButtonText = "Добавить геолокацию";
+    }
   }
 
 }

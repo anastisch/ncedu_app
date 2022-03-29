@@ -11,7 +11,7 @@ import { CoffeeShopSummary } from 'src/app/model/coffeeShopSummary/coffee-shop-s
 })
 export class CoffeeShopService {
 
-  COFFEE_SHOP_URL: string = "http://localhost:3000/coffeeShops";
+  COFFEE_SHOP_URL: string = "http://localhost:8080/cafeterias";
 
   constructor(private httpClient: HttpClient) { }
 
@@ -20,7 +20,12 @@ export class CoffeeShopService {
   }
 
   getCoffeeShops(): Observable<CoffeeShopSummary[]> {
-    return this.httpClient.get<CoffeeShopSummary[]>(this.COFFEE_SHOP_URL).pipe(
+    return this.httpClient.get<CoffeeShopSummary[]>(this.COFFEE_SHOP_URL, {
+      params: {
+        page: 0,
+        dist: 5000
+      }
+    }).pipe(
       map( (resp) => 
         {
           console.log(resp);

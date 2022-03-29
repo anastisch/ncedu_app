@@ -1,7 +1,7 @@
 .workDayName {
     padding-right: 15px; 
     margin-bottom: 0;
-    width: 50px;
+    width: 100px;
 }
 
 .workDayInputBlock {
@@ -15,3 +15,8 @@
 button {
     margin: 5px;
 }
+
+/* #addCoffeeShop .modal-content {
+    width: 900px;
+    margin: auto;
+} */

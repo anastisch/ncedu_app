@@ -6,8 +6,8 @@ export class CoffeeShop {
     constructor(
         public id: number,
         public name: string, 
-        public desc: string,
-        public location: string,
+        public description: string,
+        public location: any,
         public address: string,
         public url: string,
         public phone: string,
